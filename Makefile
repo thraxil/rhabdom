@@ -13,5 +13,5 @@ fmt:
 	go fmt *.go
 
 install_deps:
-	go get github.com/mrb/riakpbc
-	go get github.com/stvp/go-toml-config
+	go get -u github.com/mrb/riakpbc
+	go get -u github.com/stvp/go-toml-config
