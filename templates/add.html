@@ -1,0 +1,20 @@
+{{ define "title" }}Add{{ end }}
+
+{{ define "content" }}
+<form action="." method="post">
+<fieldset>
+	<legend>Post</legend>
+	<div class="row">
+		<div class="col-lg-3">
+			<input type="text" name="youtube_id" placeholder="youtube id" class="form-control"/>
+		</div>
+		<div class="col-lg-8">
+			<input type="text" name="title" placeholder="title" class="form-control"/>
+		</div>
+		<div class="col-lg-1">
+			<input type="submit" value="add" class="btn btn-default" />
+		</div>
+	</div>
+	</fieldset>
+</form>
+{{end}}

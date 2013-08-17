@@ -1,10 +1,8 @@
 package main
 
 import (
-	"github.com/mrb/riakpbc"
 	"github.com/thraxil/paginate"
 	"html/template"
-	"log"
 	"net/http"
 	"path/filepath"
 )
@@ -39,31 +37,15 @@ func indexHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 }
 
 func addHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
-	addPost(ctx.PostCoder, ctx.PlainClient)
-}
-
-func addPost(postCoder, plainClient *riakpbc.Client) {
-	// Store Struct (uses coder)
-	data := Post{
-		YoutubeID: "p43CfAVgX2U",
-		Title:     "Siobhan Donaghy - Ghosts",
-		Timestamp: "2012-08-12 22:03:00",
+	if r.Method == "POST" {
+		title := r.PostFormValue("title")
+		youtube_id := r.PostFormValue("youtube_id")
+		NewPost(youtube_id, title, ctx)
+		http.Redirect(w, r, "/", http.StatusFound)
+	} else {
+		tmpl := getTemplate("add.html")
+		tmpl.Execute(w, nil)
 	}
-	if _, err := postCoder.StoreStruct("test.rhabdom", "testpost", &data); err != nil {
-		log.Println(err.Error())
-	}
-	if err := postCoder.LinkAdd("test.rhabdom", "index",
-		"test.rhabdom", "testpost", "post"); err != nil {
-		log.Println(err.Error())
-	}
-
-	log.Println("saved struct")
-	// Fetch Struct (uses coder)
-	out := &Post{}
-	if _, err := postCoder.FetchStruct("test.rhabdom", "testpost", out); err != nil {
-		log.Println(err.Error())
-	}
-	log.Println(out.Title)
 }
 
 func getTemplate(filename string) *template.Template {

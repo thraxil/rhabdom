@@ -42,7 +42,7 @@ func (m MainIndex) ItemRange(offset, count int) []interface{} {
 			log.Println(err.Error())
 		}
 
-		posts[i] = lpost
+		posts[i] = *lpost
 	}
 	return posts
 }
