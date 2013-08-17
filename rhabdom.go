@@ -22,7 +22,9 @@ type context struct {
 
 func main() {
 	var configFile string
+	var makeindices string
 	flag.StringVar(&configFile, "config", "./dev.conf", "TOML config file")
+	flag.StringVar(&makeindices, "makeindices", "", "make index")
 	flag.Parse()
 	var (
 		port      = config.String("port", "9999")
@@ -37,7 +39,9 @@ func main() {
 		log.Println("couldn't connect to riak")
 		return
 	}
-	//	makeIndex(plainClient)
+	if makeindices != "" {
+		makeIndex(plainClient)
+	}
 	var ctx = context{
 		PostCoder:   postCoder,
 		PlainClient: plainClient,
