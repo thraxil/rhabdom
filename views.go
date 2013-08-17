@@ -107,6 +107,36 @@ func atomHandler(w http.ResponseWriter, r *http.Request,
 	fmt.Fprintf(w, atom)
 }
 
+type PostResponse struct {
+	Post     Post
+	SiteName string
+}
+
+func postHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
+	parts := strings.Split(r.URL.String(), "/")
+	if len(parts) < 3 {
+		http.Error(w, "bad request", 400)
+		return
+	}
+	id := parts[2]
+	if id == "" {
+		http.Error(w, "bad request", 400)
+		return
+	}
+	var post Post
+	_, err := ctx.PostCoder.FetchStruct("test.rhabdom", id, &post)
+	if err != nil {
+		http.Error(w, "not found", 404)
+		return
+	}
+	ir := PostResponse{
+		Post:     post,
+		SiteName: SITE_NAME,
+	}
+	tmpl := getTemplate("post.html")
+	tmpl.Execute(w, ir)
+}
+
 func getTemplate(filename string) *template.Template {
 	var t = template.New("base.html")
 	return template.Must(t.ParseFiles(

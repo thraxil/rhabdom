@@ -63,6 +63,7 @@ func main() {
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/", makeHandler(indexHandler, &ctx))
 	http.HandleFunc("/atom.xml", makeHandler(atomHandler, &ctx))
+	http.HandleFunc("/post/", makeHandler(postHandler, &ctx))
 	http.HandleFunc("/add/", makeHandler(addHandler, &ctx))
 	http.Handle("/media/", http.StripPrefix("/media/",
 		http.FileServer(http.Dir(*media_dir))))

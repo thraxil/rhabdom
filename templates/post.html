@@ -1,0 +1,13 @@
+{{ define "title" }}{{.Post.Title}}{{ end }}
+
+{{ define "content" }}
+
+<h3><a href="{{.Post.URL}}">{{.Post.Title}}</a></h3>
+<div class="embed video-player">
+<iframe class="youtube-player" type="text/html"
+    width="640" height="385" 
+    src="http://www.youtube.com/embed/{{.Post.YoutubeID}}"
+    allowfullscreen frameborder="0">
+</iframe>
+</div>
+{{end}}
