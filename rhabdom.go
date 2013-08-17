@@ -10,6 +10,11 @@ import (
 )
 
 var SITE_NAME = "Rhabdom"
+var URL_BASE = "http://localhost:9999"
+var FEED_LINK = "http://localhost:9999/atom.xml"
+var FEED_DESCRIPTION = "video blog"
+var FEED_AUTHOR_NAME = "anders pearson"
+var FEED_AUTHOR_EMAIL = "anders@columbia.edu"
 var template_dir = "templates"
 
 type context struct {
@@ -24,15 +29,25 @@ func main() {
 	flag.StringVar(&makeindices, "makeindices", "", "make index")
 	flag.Parse()
 	var (
-		port       = config.String("port", "9999")
-		media_dir  = config.String("media_dir", "media")
-		t_dir      = config.String("template_dir", "templates")
-		riak_nodes = config.String("riak_nodes", "")
-		site_name  = config.String("site_name", "Rhabdom")
+		port              = config.String("port", "9999")
+		media_dir         = config.String("media_dir", "media")
+		t_dir             = config.String("template_dir", "templates")
+		riak_nodes        = config.String("riak_nodes", "")
+		site_name         = config.String("site_name", "Rhabdom")
+		url_base          = config.String("url_base", "http://localhost:9999")
+		feed_link         = config.String("feed_link", "http://localhost:9999/atom.xml")
+		feed_description  = config.String("feed_description", "video blog")
+		feed_author_name  = config.String("feed_author_name", "anders")
+		feed_author_email = config.String("feed_author_email", "anders@columbia.edu")
 	)
 	config.Parse(configFile)
 	template_dir = *t_dir
 	SITE_NAME = *site_name
+	URL_BASE = *url_base
+	FEED_LINK = *feed_link
+	FEED_DESCRIPTION = *feed_description
+	FEED_AUTHOR_NAME = *feed_author_name
+	FEED_AUTHOR_EMAIL = *feed_author_email
 	postCoder, plainClient, err := connect(strings.Split(*riak_nodes, ","))
 	if err != nil {
 		log.Println("couldn't connect to riak")
@@ -47,6 +62,7 @@ func main() {
 	}
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/", makeHandler(indexHandler, &ctx))
+	http.HandleFunc("/atom.xml", makeHandler(atomHandler, &ctx))
 	http.HandleFunc("/add/", makeHandler(addHandler, &ctx))
 	http.Handle("/media/", http.StripPrefix("/media/",
 		http.FileServer(http.Dir(*media_dir))))

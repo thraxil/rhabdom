@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"github.com/gorilla/feeds"
 	"github.com/thraxil/paginate"
 	"html/template"
 	"net/http"
@@ -70,6 +72,39 @@ func addHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 		tmpl.Execute(w, AddResponse{YoutubeID: youtube_id,
 			Title: title, SiteName: SITE_NAME})
 	}
+}
+
+func atomHandler(w http.ResponseWriter, r *http.Request,
+	ctx *context) {
+	index, _ := getIndex(ctx.PlainClient, ctx.PostCoder)
+	var p = paginate.Paginator{ItemList: index, PerPage: 20}
+	page := p.GetPageNumber(1)
+	iposts := page.Items()
+	posts := make([]Post, len(iposts))
+	for i, v := range iposts {
+		posts[i] = v.(Post)
+	}
+	feed := &feeds.Feed{
+		Title:       SITE_NAME,
+		Link:        &feeds.Link{Href: FEED_LINK},
+		Description: FEED_DESCRIPTION,
+		Author:      &feeds.Author{FEED_AUTHOR_NAME, FEED_AUTHOR_EMAIL},
+		Created:     posts[0].TimestampAsTime(),
+	}
+
+	feed.Items = []*feeds.Item{}
+	for _, p := range posts {
+		feed.Items = append(feed.Items,
+			&feeds.Item{
+				Title:       p.Title,
+				Link:        &feeds.Link{Href: p.URL()},
+				Description: p.Body(),
+				Created:     p.TimestampAsTime(),
+			})
+	}
+	atom, _ := feed.ToAtom()
+	w.Header().Set("Content-Type", "application/atom+xml")
+	fmt.Fprintf(w, atom)
 }
 
 func getTemplate(filename string) *template.Template {
