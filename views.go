@@ -17,8 +17,9 @@ func makeHandler(f func(http.ResponseWriter, *http.Request, *context),
 }
 
 type IndexResponse struct {
-	Page  paginate.Page
-	Posts []Post
+	Page     paginate.Page
+	Posts    []Post
+	SiteName string
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
@@ -31,8 +32,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 		posts[i] = v.(Post)
 	}
 	ir := IndexResponse{
-		Page:  page,
-		Posts: posts,
+		Page:     page,
+		Posts:    posts,
+		SiteName: SITE_NAME,
 	}
 	tmpl := getTemplate("index.html")
 	tmpl.Execute(w, ir)
@@ -40,11 +42,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 
 type AddResponse struct {
 	YoutubeID string
-	Title string
+	Title     string
+	SiteName  string
 }
 
 func youtubeIDFromURL(rawurl string) string {
-	u, err  := url.Parse(rawurl)
+	u, err := url.Parse(rawurl)
 	if err != nil {
 		return ""
 	}
@@ -64,7 +67,8 @@ func addHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 		r := "▶ "
 		title = strings.Trim(title, r)
 		tmpl := getTemplate("add.html")
-		tmpl.Execute(w, AddResponse{YoutubeID: youtube_id, Title: title})
+		tmpl.Execute(w, AddResponse{YoutubeID: youtube_id,
+			Title: title, SiteName: SITE_NAME})
 	}
 }
 

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-
+var SITE_NAME = "Rhabdom"
 var template_dir = "templates"
 
 type context struct {
@@ -24,13 +24,15 @@ func main() {
 	flag.StringVar(&makeindices, "makeindices", "", "make index")
 	flag.Parse()
 	var (
-		port      = config.String("port", "9999")
-		media_dir = config.String("media_dir", "media")
-		t_dir     = config.String("template_dir", "templates")
+		port       = config.String("port", "9999")
+		media_dir  = config.String("media_dir", "media")
+		t_dir      = config.String("template_dir", "templates")
 		riak_nodes = config.String("riak_nodes", "")
+		site_name  = config.String("site_name", "Rhabdom")
 	)
 	config.Parse(configFile)
 	template_dir = *t_dir
+	SITE_NAME = *site_name
 	postCoder, plainClient, err := connect(strings.Split(*riak_nodes, ","))
 	if err != nil {
 		log.Println("couldn't connect to riak")

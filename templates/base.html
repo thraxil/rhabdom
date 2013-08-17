@@ -1,4 +1,5 @@
-<html><head><title>{{template "title" .}}</title>
+<!DOCTYPE html>
+<html><head><title>{{template "title" .}} - {{.SiteName}}</title>
 <link rel="stylesheet" type="text/css"
 			href="/media/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css"
@@ -7,11 +8,9 @@
 </style>
 </head>
 <body>
-<div class="navbar">
-  <a class="navbar-brand active" href="/">Rhabdom</a>
-</div>
-
 <div class="container">
+<h1>{{.SiteName}}</h1>
+
 {{template "content" .}}
 </div>
 </body>
