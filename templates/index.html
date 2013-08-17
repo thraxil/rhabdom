@@ -3,6 +3,16 @@
 
 {{ define "content" }}
 
+<ul class="pagination">
+{{if .Page.HasPrev}}
+  <li><a href="/?page={{.Page.PrevPage}}">&laquo;</a></li>
+{{end}}
+  <li class="active"><span>{{.Page.PageNumber}}</span></li>
+{{if .Page.HasNext}}
+  <li><a href="/?page={{.Page.NextPage}}">&raquo;</a></li>
+{{end}}
+</ul>
+
 {{range .Posts}}
 <h3>{{.Title}}</h3>
 <div class="embed video-player">
@@ -13,5 +23,15 @@
 </iframe>
 </div>
 {{end}}
+
+<ul class="pagination">
+{{if .Page.HasPrev}}
+  <li><a href="/?page={{.Page.PrevPage}}">&laquo;</a></li>
+{{end}}
+  <li class="active"><span>{{.Page.PageNumber}}</span></li>
+{{if .Page.HasNext}}
+  <li><a href="/?page={{.Page.NextPage}}">&raquo;</a></li>
+{{end}}
+</ul>
 {{end}}
 
