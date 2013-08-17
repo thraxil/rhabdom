@@ -6,10 +6,10 @@ import (
 	"github.com/stvp/go-toml-config"
 	"log"
 	"net/http"
+	"strings"
 )
 
-var RIAK_NODES = []string{"127.0.0.1:10017",
-	"127.0.0.0:10027", "127.0.0.0:10037"}
+
 var template_dir = "templates"
 
 type context struct {
@@ -27,11 +27,11 @@ func main() {
 		port      = config.String("port", "9999")
 		media_dir = config.String("media_dir", "media")
 		t_dir     = config.String("template_dir", "templates")
+		riak_nodes = config.String("riak_nodes", "")
 	)
 	config.Parse(configFile)
 	template_dir = *t_dir
-
-	postCoder, plainClient, err := connect(RIAK_NODES)
+	postCoder, plainClient, err := connect(strings.Split(*riak_nodes, ","))
 	if err != nil {
 		log.Println("couldn't connect to riak")
 		return
@@ -57,7 +57,7 @@ func main() {
 func connect(nodes []string) (*riakpbc.Client, *riakpbc.Client, error) {
 	coder := riakpbc.NewCoder("json", riakpbc.JsonMarshaller,
 		riakpbc.JsonUnmarshaller)
-	postCoder := riakpbc.NewClientWithCoder(RIAK_NODES, coder)
+	postCoder := riakpbc.NewClientWithCoder(nodes, coder)
 	if err := postCoder.Dial(); err != nil {
 		log.Print(err.Error())
 		return nil, nil, err
@@ -67,7 +67,7 @@ func connect(nodes []string) (*riakpbc.Client, *riakpbc.Client, error) {
 		return nil, nil, err
 	}
 
-	plainClient := riakpbc.NewClient(RIAK_NODES)
+	plainClient := riakpbc.NewClient(nodes)
 	if err := plainClient.Dial(); err != nil {
 		log.Print(err.Error())
 		return nil, nil, err
