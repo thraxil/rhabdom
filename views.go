@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/mrb/riakpbc"
+	"github.com/thraxil/paginate"
 	"html/template"
 	"log"
 	"net/http"
@@ -15,14 +16,26 @@ func makeHandler(f func(http.ResponseWriter, *http.Request, *context),
 	}
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
-	index, _ := getIndex(ctx.PlainClient)
-	for i, k := range index.GetContent()[0].GetLinks() {
-		log.Println(i, string(k.Key))
-	}
+type IndexResponse struct {
+	Page  paginate.Page
+	Posts []Post
+}
 
+func indexHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
+	index, _ := getIndex(ctx.PlainClient, ctx.PostCoder)
+	var p = paginate.Paginator{ItemList: index, PerPage: 20}
+	page := p.GetPage(r)
+	iposts := page.Items()
+	posts := make([]Post, len(iposts))
+	for i, v := range iposts {
+		posts[i] = v.(Post)
+	}
+	ir := IndexResponse{
+		Page:  page,
+		Posts: posts,
+	}
 	tmpl := getTemplate("index.html")
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, ir)
 }
 
 func addHandler(w http.ResponseWriter, r *http.Request, ctx *context) {

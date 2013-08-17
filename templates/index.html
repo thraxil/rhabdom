@@ -2,6 +2,9 @@
 
 
 {{ define "content" }}
-index
+
+{{range .Posts}}
+<h3>{{.Title}}</h3>
+{{end}}
 {{end}}
 

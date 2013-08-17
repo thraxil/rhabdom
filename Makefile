@@ -1,6 +1,6 @@
 all: rhabdom
 
-rhabdom: rhabdom.go post.go index.go
+rhabdom: *.go
 	go build .
 
 run: rhabdom
@@ -15,3 +15,4 @@ fmt:
 install_deps:
 	go get -u github.com/mrb/riakpbc
 	go get -u github.com/stvp/go-toml-config
+	go get -u github.com/thraxil/paginate
