@@ -4,7 +4,9 @@ import (
 	"github.com/thraxil/paginate"
 	"html/template"
 	"net/http"
+	"net/url"
 	"path/filepath"
+	"strings"
 )
 
 func makeHandler(f func(http.ResponseWriter, *http.Request, *context),
@@ -36,6 +38,20 @@ func indexHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 	tmpl.Execute(w, ir)
 }
 
+type AddResponse struct {
+	YoutubeID string
+	Title string
+}
+
+func youtubeIDFromURL(rawurl string) string {
+	u, err  := url.Parse(rawurl)
+	if err != nil {
+		return ""
+	}
+	q := u.Query()
+	return q["v"][0]
+}
+
 func addHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 	if r.Method == "POST" {
 		title := r.PostFormValue("title")
@@ -43,8 +59,12 @@ func addHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 		NewPost(youtube_id, title, ctx)
 		http.Redirect(w, r, "/", http.StatusFound)
 	} else {
+		youtube_id := youtubeIDFromURL(r.FormValue("url"))
+		title := string(r.FormValue("title"))
+		r := "▶ "
+		title = strings.Trim(title, r)
 		tmpl := getTemplate("add.html")
-		tmpl.Execute(w, nil)
+		tmpl.Execute(w, AddResponse{YoutubeID: youtube_id, Title: title})
 	}
 }
 

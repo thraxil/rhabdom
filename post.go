@@ -32,6 +32,4 @@ func NewPost(youtube_id, title string, ctx *context) {
 		"test.rhabdom", u4.String(), "post"); err != nil {
 		log.Println(err.Error())
 	}
-
-	log.Println("saved struct")
 }

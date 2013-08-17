@@ -1,15 +1,21 @@
 {{ define "title" }}Add{{ end }}
 
 {{ define "content" }}
+<p><a rel="tooltip" title="drag this onto your browser toolbar"
+href="javascript:window.location='http://localhost:9999/add/?url='+escape(window.location)+';title='+escape(document.title.replace(/▶ /g, ''))"><span class="glyphicon glyphicon-bookmark"></span></a></p>
+
 <form action="." method="post">
 <fieldset>
 	<legend>Post</legend>
 	<div class="row">
 		<div class="col-lg-3">
-			<input type="text" name="youtube_id" placeholder="youtube id" class="form-control"/>
+			<input type="text" name="youtube_id" placeholder="youtube id"
+						 class="form-control" value="{{.YoutubeID}}"/>
 		</div>
 		<div class="col-lg-8">
-			<input type="text" name="title" placeholder="title" class="form-control"/>
+			<input type="text" name="title" placeholder="title"
+						 class="form-control"
+						 value="{{.Title}}" />
 		</div>
 		<div class="col-lg-1">
 			<input type="submit" value="add" class="btn btn-default" />
