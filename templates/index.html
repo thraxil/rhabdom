@@ -1,4 +1,4 @@
-{{ define "title" }}Rhabdom{{ end }}
+{{ define "title" }}{{ end }}
 
 
 {{ define "content" }}
@@ -17,7 +17,7 @@
 <h3><a href="{{.URL}}">{{.Title}}</a></h3>
 <div class="embed video-player">
 <iframe class="youtube-player" type="text/html"
-    width="640" height="385" 
+    width="640" height="385"
     src="http://www.youtube.com/embed/{{.YoutubeID}}"
     allowfullscreen frameborder="0">
 </iframe>
@@ -34,4 +34,3 @@
 {{end}}
 </ul>
 {{end}}
-
