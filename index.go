@@ -11,7 +11,7 @@ type MainIndex struct {
 }
 
 func makeIndex(c *riakpbc.Client) {
-	if _, err := c.StoreObject("test.rhabdom",
+	if _, err := c.StoreObject(BUCKET,
 		"index", ""); err != nil {
 		log.Println(err.Error())
 	}
@@ -19,7 +19,7 @@ func makeIndex(c *riakpbc.Client) {
 }
 
 func getIndex(c *riakpbc.Client, pc *riakpbc.Client) (*MainIndex, error) {
-	o, err := c.FetchObject("test.rhabdom", "index")
+	o, err := c.FetchObject(BUCKET, "index")
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (m MainIndex) ItemRange(offset, count int) []interface{} {
 		key := m.Obj.GetContent()[0].GetLinks()[total-(offset+i+1)].Key
 		lpost := &Post{}
 		if _, err := m.PostCoder.FetchStruct(
-			"test.rhabdom", string(key), lpost); err != nil {
+			BUCKET, string(key), lpost); err != nil {
 			log.Println(err.Error())
 		}
 

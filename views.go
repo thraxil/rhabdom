@@ -124,7 +124,7 @@ func postHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 		return
 	}
 	var post Post
-	_, err := ctx.PostCoder.FetchStruct("test.rhabdom", id, &post)
+	_, err := ctx.PostCoder.FetchStruct(BUCKET, id, &post)
 	if err != nil {
 		http.Error(w, "not found", 404)
 		return

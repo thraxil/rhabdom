@@ -27,11 +27,11 @@ func NewPost(youtube_id, title string, ctx *context) {
 		Timestamp: t.Format(time.RFC3339),
 		Id:        u4.String(),
 	}
-	if _, err := ctx.PostCoder.StoreStruct("test.rhabdom", u4.String(), &data); err != nil {
+	if _, err := ctx.PostCoder.StoreStruct(BUCKET, u4.String(), &data); err != nil {
 		log.Println(err.Error())
 	}
-	if err := ctx.PostCoder.LinkAdd("test.rhabdom", "index",
-		"test.rhabdom", u4.String(), "post"); err != nil {
+	if err := ctx.PostCoder.LinkAdd(BUCKET, "index",
+		BUCKET, u4.String(), "post"); err != nil {
 		log.Println(err.Error())
 	}
 }

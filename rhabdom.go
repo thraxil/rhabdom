@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+var BUCKET = "test.rhabdom"
 var SITE_NAME = "Rhabdom"
 var URL_BASE = "http://localhost:9999"
 var FEED_LINK = "http://localhost:9999/atom.xml"
@@ -33,6 +34,7 @@ func main() {
 		media_dir         = config.String("media_dir", "media")
 		t_dir             = config.String("template_dir", "templates")
 		riak_nodes        = config.String("riak_nodes", "")
+		bucket            = config.String("bucket", "test.rhabdom")
 		site_name         = config.String("site_name", "Rhabdom")
 		url_base          = config.String("url_base", "http://localhost:9999")
 		feed_link         = config.String("feed_link", "http://localhost:9999/atom.xml")
@@ -41,6 +43,7 @@ func main() {
 		feed_author_email = config.String("feed_author_email", "anders@columbia.edu")
 	)
 	config.Parse(configFile)
+	BUCKET = *bucket
 	template_dir = *t_dir
 	SITE_NAME = *site_name
 	URL_BASE = *url_base
@@ -51,6 +54,7 @@ func main() {
 	postCoder, plainClient, err := connect(strings.Split(*riak_nodes, ","))
 	if err != nil {
 		log.Println("couldn't connect to riak")
+		log.Println(err)
 		return
 	}
 	if makeindices != "" {
