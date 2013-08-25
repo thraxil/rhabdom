@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/mrb/riakpbc"
+	"github.com/peterbourgon/g2s"
 	"github.com/stvp/go-toml-config"
 	"log"
 	"net/http"
@@ -17,6 +18,7 @@ var FEED_DESCRIPTION = "video blog"
 var FEED_AUTHOR_NAME = "anders pearson"
 var FEED_AUTHOR_EMAIL = "anders@columbia.edu"
 var template_dir = "templates"
+var statsd g2s.Statter
 
 type context struct {
 	PostCoder   *riakpbc.Client
@@ -64,6 +66,7 @@ func main() {
 		PostCoder:   postCoder,
 		PlainClient: plainClient,
 	}
+	statsd, _ = g2s.Dial("udp", "127.0.0.1:8125")
 	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/", makeHandler(indexHandler, &ctx))
 	http.HandleFunc("/atom.xml", makeHandler(atomHandler, &ctx))

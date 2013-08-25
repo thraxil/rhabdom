@@ -9,12 +9,17 @@ import (
 	"net/url"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 func makeHandler(f func(http.ResponseWriter, *http.Request, *context),
 	ctx *context) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		t0 := time.Now()
 		f(w, r, ctx)
+		t1 := time.Now()
+		statsd.Counter(1.0, "rhabdom.hits", 1)
+		statsd.Timing(1.0, "rhabdom.time", t1.Sub(t0))
 	}
 }
 

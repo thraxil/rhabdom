@@ -18,3 +18,4 @@ install_deps:
 	go get -u github.com/nu7hatch/gouuid
 	go get -u github.com/thraxil/paginate
 	go get -u github.com/gorilla/feeds
+	go get -u github.com/peterbourgon/g2s
