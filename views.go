@@ -18,8 +18,8 @@ func makeHandler(f func(http.ResponseWriter, *http.Request, *context),
 		t0 := time.Now()
 		f(w, r, ctx)
 		t1 := time.Now()
-		statsd.Counter(1.0, "rhabdom.hits", 1)
-		statsd.Timing(1.0, "rhabdom.time", t1.Sub(t0))
+		statsd.Counter(1.0, "rhabdom.response.200", 1)
+		statsd.Timing(1.0, "rhabdom.view.GET", t1.Sub(t0))
 	}
 }
 
