@@ -26,7 +26,7 @@ type IndexResponse struct {
 
 func indexHandler(w http.ResponseWriter, r *http.Request, ctx *context) {
 	index, _ := getIndex(ctx.PlainClient, ctx.PostCoder)
-	var p = paginate.Paginator{ItemList: index, PerPage: 20}
+	var p = paginate.Paginator{ItemList: index, PerPage: 10}
 	page := p.GetPage(r)
 	iposts := page.Items()
 	posts := make([]Post, len(iposts))

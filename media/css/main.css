@@ -1,0 +1,30 @@
+body {
+background-color: #000;
+}
+
+h1 {
+   color: #fff;
+}
+
+h3 {
+		background-color: #666;
+    width: 640px;
+    margin-top: 2em;
+}
+
+h3 a:link, h3 a:visited {
+		color: #000;
+}
+
+.pagination li a {
+   background-color: #666;
+   color: #fff;
+}
+.pagination li a:hover {
+   color: #666;
+}
+
+.pagination li.active span {
+   background-color: #666;
+   color: #000;
+}
